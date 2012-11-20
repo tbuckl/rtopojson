@@ -10,14 +10,15 @@ from itertools import chain
 import math
 
 def transform(arc, scale=None, translate=None):
-    a, b = 0.0, 0.0
-    for ax, bx in arc:
-        a += ax
-        b += bx
-        if scale and translate:
+    if scale and translate:
+        a, b = 0.0, 0.0
+        for ax, bx in arc:
+            a += ax
+            b += bx
             yield scale[0]*a + translate[0], scale[1]*b + translate[1]
-        else:
-            yield a, b
+    else:
+        for x, y in arc:
+            yield x, y
 
 def coordinates(arcs, topology_arcs, scale=None, translate=None):
     """Returns coordinates for arcs within the entire topology."""
