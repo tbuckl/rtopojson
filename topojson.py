@@ -7,7 +7,6 @@ Author: Sean Gillies (https://github.com/sgillies)
 """
 
 from itertools import chain
-import math
 
 def transform(arc, scale=None, translate=None):
     if scale and translate:
@@ -22,26 +21,14 @@ def transform(arc, scale=None, translate=None):
 
 def coordinates(arcs, topology_arcs, scale=None, translate=None):
     """Returns coordinates for arcs within the entire topology."""
-    # Our tolerance is the delta encoding scale if given, else a small value.
-    tolerance = scale or (1.0e-15, 1.0e-15)
     if isinstance(arcs[0], int):
-        # Wrap the chain of arc coordinates in a duplicate-removing
-        # generator.
-        def dupe_removing_chain():
-            last = None
-            for item in chain(*(
-                    transform(topology_arcs[arc], scale, translate
-                    ) for arc in arcs)):
-                # If subsequent points are within 'tolerance' distance we
-                # skip the duplicate.
-                if last and (
-                    math.fabs(last[0]-item[0]
-                        ) < tolerance[0] and math.fabs(
-                        last[1]-item[1]) < tolerance[1]):
-                    continue
-                last = item
-                yield item
-        return list(dupe_removing_chain())
+        return list(
+            chain(*(transform(
+                topology_arcs[arc][:len(arcs)-i > 1 and -1 or None],
+                scale, 
+                translate
+                ) for i, arc in enumerate(arcs))))
+
     elif isinstance(arcs[0], (list, tuple)):
         return list(
             coordinates(arc, topology_arcs, scale, translate) for arc in arcs)
