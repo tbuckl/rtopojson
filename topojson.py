@@ -28,7 +28,7 @@ def coordinates(arcs, topology_arcs, scale=None, translate=None):
                     topology_arcs[arc >= 0 and arc or ~arc],
                     scale, 
                     translate )
-                 )[:len(arcs)-i > 1 and -1 or None][::arc >= 0 or -1] \
+                 )[i > 0:][::arc >= 0 or -1] \
             for i, arc in enumerate(arcs) ]
         return list(chain(*coords))
     elif isinstance(arcs[0], (list, tuple)):
