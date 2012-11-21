@@ -8,7 +8,7 @@ Author: Sean Gillies (https://github.com/sgillies)
 
 from itertools import chain
 
-def transform(arc, scale=None, translate=None):
+def rel2abs(arc, scale=None, translate=None):
     if scale and translate:
         a, b = 0.0, 0.0
         for ax, bx in arc:
@@ -22,13 +22,15 @@ def transform(arc, scale=None, translate=None):
 def coordinates(arcs, topology_arcs, scale=None, translate=None):
     """Returns coordinates for arcs within the entire topology."""
     if isinstance(arcs[0], int):
-        return list(
-            chain(*(transform(
-                topology_arcs[arc][:len(arcs)-i > 1 and -1 or None],
-                scale, 
-                translate
-                ) for i, arc in enumerate(arcs))))
-
+        coords = [
+            list(
+                rel2abs(
+                    topology_arcs[arc >= 0 and arc or ~arc],
+                    scale, 
+                    translate )
+                 )[:len(arcs)-i > 1 and -1 or None][::arc >= 0 or -1] \
+            for i, arc in enumerate(arcs) ]
+        return list(chain(*coords))
     elif isinstance(arcs[0], (list, tuple)):
         return list(
             coordinates(arc, topology_arcs, scale, translate) for arc in arcs)
