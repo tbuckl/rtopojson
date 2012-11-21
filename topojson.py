@@ -25,7 +25,7 @@ def coordinates(arcs, topology_arcs, scale=None, translate=None):
         coords = [
             list(
                 rel2abs(
-                    topology_arcs[arc >= 0 and arc or ~arc],
+                    topology_arcs[arc if arc >= 0 else ~arc],
                     scale, 
                     translate )
                  )[i > 0:][::arc >= 0 or -1] \
