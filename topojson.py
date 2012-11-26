@@ -1,7 +1,7 @@
 """ topojson.py
 
-Functions to help make GeoJSON-ish data structures from TopoJSON
-(https://github.com/mbostock/topojson) data.
+Functions that extract GeoJSON-ish data structures from TopoJSON
+(https://github.com/mbostock/topojson) topology data.
 
 Author: Sean Gillies (https://github.com/sgillies)
 """
@@ -9,8 +9,12 @@ Author: Sean Gillies (https://github.com/sgillies)
 from itertools import chain
 
 def rel2abs(arc, scale=None, translate=None):
+    """Yields absolute coordinate tuples from a delta-encoded arc.
+
+    If either the scale or translate parameter evaluate to False, yield the
+    arc coordinates with no transformation."""
     if scale and translate:
-        a, b = 0.0, 0.0
+        a, b = 0, 0
         for ax, bx in arc:
             a += ax
             b += bx
@@ -20,7 +24,20 @@ def rel2abs(arc, scale=None, translate=None):
             yield x, y
 
 def coordinates(arcs, topology_arcs, scale=None, translate=None):
-    """Returns coordinates for arcs within the entire topology."""
+    """Return GeoJSON coordinates for the sequence(s) of arcs.
+    
+    The arcs parameter may be a sequence of ints, each the index of a
+    coordinate sequence within topology_arcs
+    within the entire topology -- describing a line string, a sequence of 
+    such sequences -- describing a polygon, or a sequence of polygon arcs.
+    
+    The topology_arcs parameter is a list of the shared, absolute or
+    delta-encoded arcs in the dataset.
+
+    The scale and translate parameters are used to convert from delta-encoded
+    to absolute coordinates. They are 2-tuples and are usually provided by
+    a TopoJSON dataset. 
+    """
     if isinstance(arcs[0], int):
         coords = [
             list(
@@ -28,7 +45,7 @@ def coordinates(arcs, topology_arcs, scale=None, translate=None):
                     topology_arcs[arc if arc >= 0 else ~arc],
                     scale, 
                     translate )
-                 )[i > 0:][::arc >= 0 or -1] \
+                 )[::arc >= 0 or -1][i > 0:] \
             for i, arc in enumerate(arcs) ]
         return list(chain(*coords))
     elif isinstance(arcs[0], (list, tuple)):
@@ -38,11 +55,19 @@ def coordinates(arcs, topology_arcs, scale=None, translate=None):
         raise ValueError("Invalid input %s", arcs)
 
 def geometry(obj, topology_arcs, scale=None, translate=None):
-    """Converts a topology object to a geometry object."""
+    """Converts a topology object to a geometry object.
+    
+    The topology object is a dict with 'type' and 'arcs' items, such as
+    {'type': "LineString", 'arcs': [0, 1, 2]}.
+
+    See the coordinates() function for a description of the other three
+    parameters.
+    """
     return {
         "type": obj['type'], 
         "coordinates": coordinates(
             obj['arcs'], topology_arcs, scale, translate )}
+
 
 if __name__ == "__main__":
     
@@ -53,7 +78,7 @@ if __name__ == "__main__":
 
     data = """{
     "arcs": [
-      [[0.0, 0.0], [1.0, 0.0]],
+      [[0, 0], [1, 0]],
       [[1.0, 0.0], [0.0, 1.0]],
       [[0.0, 1.0], [0.0, 0.0]],
       [[1.0, 0.0], [1.0, 1.0]],
