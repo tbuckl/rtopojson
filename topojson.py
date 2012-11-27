@@ -47,7 +47,7 @@ def coordinates(arcs, topology_arcs, scale=None, translate=None):
                     translate )
                  )[::arc >= 0 or -1][i > 0:] \
             for i, arc in enumerate(arcs) ]
-        return list(chain(*coords))
+        return list(chain.from_iterable(coords))
     elif isinstance(arcs[0], (list, tuple)):
         return list(
             coordinates(arc, topology_arcs, scale, translate) for arc in arcs)
