@@ -26,14 +26,24 @@ rel2abs <- function(arc, scale=Null, translate=Null) {
   }
 }
 
-TopoPolyToSp <- function(single_arc_index,all_arcs,scale,translate) {  
+TopoToPoly <- function(single_arc_index,all_arcs,scale,translate) {  
   select_arc <- unlist(all_arcs[single_arc_index+1],recursive=FALSE)
   list_of_absolute_coords <- lapply(select_arc,rel2abs,scale=scale,translate=translate)
   closing_vertex<-unlist(select_arc[1])
   closing_vertex_absolute <- rel2abs(closing_vertex,scale,translate)
   list_of_absolute_coords[[length(list_of_absolute_coords)+1]] <- closing_vertex_absolute
-  Polygon(do.call(rbind, list_of_absolute_coords))  
+  Polygon(do.call(rbind, list_of_absolute_coords))
 }
+
+TopoToPolys <- function(object,arcs) {
+  
+}
+
+apply()
+
+object <- unlist(single_swiss_object_arc_index,recursive=FALSE)
+
+apply(object,1,TopoToPoly,swiss_arcs,scale=swiss_scale,translate=swiss_translate)
 
 result <- TopoPolyToSp(single_swiss_object_arc_index[[1]][[1]],swiss_arcs,scale=swiss_scale,translate=swiss_translate)
 
