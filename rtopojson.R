@@ -9,6 +9,7 @@ swiss_translate <- swiss_poly$transform$translate
 
 swiss_objects <- swiss_poly$objects$"swiss-cantons"$geometries
 swiss_arcs <- swiss_poly$arcs
+single_swiss_object <- swiss_objects[[1]]
 single_swiss_object_arc_index <- swiss_objects[[1]]$arcs
 
 #going from relative to absolute coordinates
@@ -26,13 +27,14 @@ rel2abs <- function(arc, scale=Null, translate=Null) {
   }
 }
 
-TopoToPoly <- function(single_arc_index,all_arcs,scale,translate) {  
+TopoToLine <- function(single_arc_index,all_arcs,scale,translate) {  
   select_arc <- unlist(all_arcs[single_arc_index+1],recursive=FALSE)
   list_of_absolute_coords <- lapply(select_arc,rel2abs,scale=scale,translate=translate)
-  closing_vertex<-unlist(select_arc[1])
-  closing_vertex_absolute <- rel2abs(closing_vertex,scale,translate)
-  list_of_absolute_coords[[length(list_of_absolute_coords)+1]] <- closing_vertex_absolute
-  Polygon(do.call(rbind, list_of_absolute_coords))
+#  oops, was closing arcs as polygons!
+#  closing_vertex<-unlist(select_arc[1])
+#  closing_vertex_absolute <- rel2abs(closing_vertex,scale,translate)
+#  list_of_absolute_coords[[length(list_of_absolute_coords)+1]] <- closing_vertex_absolute
+  Line(do.call(rbind, list_of_absolute_coords))
 }
 
 TopoToPolys <- function(object,arcs) {
@@ -43,9 +45,9 @@ apply()
 
 object <- unlist(single_swiss_object_arc_index,recursive=FALSE)
 
-apply(object,1,TopoToPoly,swiss_arcs,scale=swiss_scale,translate=swiss_translate)
+result <- sapply(object,TopoToLine,swiss_arcs,scale=swiss_scale,translate=swiss_translate)
 
-result <- TopoPolyToSp(single_swiss_object_arc_index[[1]][[1]],swiss_arcs,scale=swiss_scale,translate=swiss_translate)
+result <- TopoToLine(single_swiss_object_arc_index[[1]][[1]],swiss_arcs,scale=swiss_scale,translate=swiss_translate)
 
 #TODO:other test data
 
