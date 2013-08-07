@@ -1,11 +1,11 @@
 library("rjson")
 
 #initial test data
-json_file <- "/Users/tom/Documents/codeprojects/example.topojson"
+json_file <- "example_data/example.topojson"
 json_data <- fromJSON(paste(readLines(json_file), collapse=""))
 
 #more test data
-swiss_data <- "/Users/tom/Documents/codeprojects/swissmiss.topojson"
+swiss_data <- "example_data/swissmiss.topojson"
 swiss_poly <- fromJSON(paste(readLines(swiss_data), collapse=""))
 
 #example of getting second element from each arc:
@@ -33,7 +33,7 @@ rel2abs <- function(arc, scale=Null, translate=Null) {
 #apply arc translation to all arcs 
 lapply(arcs,rel2abs,scale=scale,translate=translate)
 
-#example call
+#example calls
 swiss_objects <- swiss_poly$objects$"swiss-cantons"$geometries
 swiss_arcs <- swiss_poly$arcs
 single_swiss_object_arc_index <- swiss_geometries[[1]]$arcs
@@ -42,6 +42,7 @@ single_swiss_object_arc_index
 aruba_arc_index <- json_data$objects$aruba$arcs
 aruba_arcs <- json_data$arcs
 
+#desired call
 SpatialPolygon <- forpolygon(object_arc_index,arcs,scale,translate)
 
 forpolygon <- function(arc_index,arcs,scale,translate) {
