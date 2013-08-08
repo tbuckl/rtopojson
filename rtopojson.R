@@ -38,12 +38,20 @@ bitflipper <- function(i) {
 
 arc_index <- swiss_objects[[5]]$arcs[[1]]
 
+object_types <- lapply(swiss_objects,function(x){x$type})
+lapply(swiss_objects[which(object_types=="Polygon")],plot_topojson)
+
+#takes a topojson "Polygon" object and 
+#makes it into an SP spatialpolygons object
+#and plots it
+plot_topojson <- function(object) {
 
 # from the inside out:
 #1) flip bits for "the one's complement" (e.g. reversed arcs like -12)
 #2) add +1 to the index b/c of R's list indexes
 #3) subset all arcs from the total set for the object
 #4) apply the transformation to each arc and output as list
+arc_index <- object$arcs[[1]]
 abs_obj <- lapply(arcs[sapply(arc_index,bitflipper)+1],rel2abs,scale,translate)
 
 #flip the arcs with negative indices
