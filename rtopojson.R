@@ -20,7 +20,6 @@ rel2abs <- function(arc, scale=Null, translate=Null) {
   if (!is.null(scale) & !is.null(translate)) {
     a <- 0
     b <- 0
-    print("newloop")
     lapply(arc,function(point) {    
       a <<- a + point[[1]]
       b <<- b + point[[2]]
