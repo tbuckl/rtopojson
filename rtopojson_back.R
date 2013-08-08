@@ -1,14 +1,16 @@
 library("rjson")
 library("bitops")
 
+test_data <- "/Users/tom/topojson/test.json"
+test_poly <- fromJSON(paste(readLines(test_data), collapse=""))
+
 #swiss test data parsing
 swiss_data <- "inst/extdata/swissborders.topojson"
 swiss_poly <- fromJSON(paste(readLines(swiss_data), collapse=""))
 
 swiss_objects <- swiss_poly$objects$"swiss-cantons"$geometries
-arcs <- swiss_poly$arcs
-scale <- swiss_poly$transform$scale
-translate <- swiss_poly$transform$translate
+swiss_arcs <- swiss_poly$arcs
+single_swiss_object <- swiss_objects[[1]]
 
 #value: returns a list of absolute coordinates 
 #(often longitude,latitude) 
@@ -36,8 +38,16 @@ bitflipper <- function(i) {
   if (i >= 0) {i = i} else {i = bitFlip(i)}
 }
 
-arc_index <- swiss_objects[[5]]$arcs[[1]]
+#takes an index,all_arcs,scale,translate
+#returns topojson 
+#returns list of absolute coordinates for all the objects arcs
 
+#loop through arc_index, making array for object
+
+arcs=swiss_arcs
+scale=swiss_scale
+translate=swiss_translate
+arc_index <- swiss_objects[[3]]$arcs[[1]]
 
 # from the inside out:
 #1) flip bits for "the one's complement" (e.g. reversed arcs like -12)
@@ -59,6 +69,46 @@ p1 <- Polygon(do.call(rbind,unlist(abs_obj,recursive=FALSE)))
 p2 <- Polygons(list(p1),ID="a")
 p3 <- SpatialPolygons(list(p2))
 plot(p3)
-p3
 
+
+
+arc_index<0
+
+
+
+#TODO:other test data
+
+arc_index <- test_data$objects[[1]]$arcs
+arcs <- test_poly$arcs
+
+
+#yet more test data
+us_data <- "inst/extdata/cali_nv_ariz.topojson"
+us_poly <- fromJSON(paste(readLines(us_data), collapse=""))
+
+#initial test data
+json_file <- "inst/extdata/example.topojson"
+json_data <- fromJSON(paste(readLines(json_file), collapse=""))
+
+#example calls from sample data 1
+aruba_arc_index <- json_data$objects$aruba$arcs
+aruba_arcs <- json_data$arcs
+
+#example of getting second element from each arc:
+lapply(json_data$arcs[[1]],function(x) x[[2]])
+
+#example extractions from parsed topojson
+scale <- json_data$transform$scale
+translate <- json_data$transform$translate
+arcs <- json_data$arcs[[1]]
+
+#apply arc translation to all arcs in example data 1
+result <- lapply(arcs,rel2abs,scale=scale,translate=translate)
+
+#make sp polygons from topojson
+forobject <- function(objects,arcs,scale,translate) {
+  
 }
+
+
+result <- lapply(swiss_arcs[[1]],rel2abs,scale=scale,translate=translate)
