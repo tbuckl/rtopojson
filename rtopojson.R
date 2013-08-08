@@ -1,5 +1,9 @@
 library("rjson")
 
+test_data <- "/Users/tom/topojson/test.json"
+test_poly <- fromJSON(paste(readLines(test_data), collapse=""))
+
+
 #swiss test data parsing
 swiss_data <- "inst/extdata/swissborders.topojson"
 swiss_poly <- fromJSON(paste(readLines(swiss_data), collapse=""))
@@ -17,11 +21,16 @@ rel2abs <- function(arc, scale=Null, translate=Null) {
   if (!is.null(scale) & !is.null(translate)) {
     a <- 0
     b <- 0
-    a <- a + arc[[1]]
-    b <- b + arc[[2]]
-    x <- scale[1]*a + translate[1]
-    y <- scale[2]*b + translate[2]
-    c(x, y)
+    lapply(arc,function(point) {    
+      print(a)
+      a <<- a + point[[1]]
+      print(a)
+      print(b)
+      b <<- b + point[[2]]
+      print(b)
+      x <- scale[1]*a + translate[1]
+      y <- scale[2]*b + translate[2]
+      c(x, y)})
   } else {
     c(arc[1], arc[2])
   }
@@ -51,17 +60,21 @@ result <- TopoToLine(single_swiss_object_arc_index[[1]][[1]],swiss_arcs,scale=sw
 
 #TODO:other test data
 
+arc_index <- test_data$objects[[1]]$arcs
+arcs <- test_poly$arcs
+
+
 #yet more test data
 us_data <- "inst/extdata/cali_nv_ariz.topojson"
 us_poly <- fromJSON(paste(readLines(us_data), collapse=""))
 
-#example calls from sample data 1
-aruba_arc_index <- json_data$objects$aruba$arcs
-aruba_arcs <- json_data$arcs
-
 #initial test data
 json_file <- "inst/extdata/example.topojson"
 json_data <- fromJSON(paste(readLines(json_file), collapse=""))
+
+#example calls from sample data 1
+aruba_arc_index <- json_data$objects$aruba$arcs
+aruba_arcs <- json_data$arcs
 
 #example of getting second element from each arc:
 lapply(json_data$arcs[[1]],function(x) x[[2]])
@@ -71,12 +84,13 @@ scale <- json_data$transform$scale
 translate <- json_data$transform$translate
 arcs <- json_data$arcs[[1]]
 
-
 #apply arc translation to all arcs in example data 1
 result <- lapply(arcs,rel2abs,scale=scale,translate=translate)
-
 
 #make sp polygons from topojson
 forobject <- function(objects,arcs,scale,translate) {
   
 }
+
+
+result <- lapply(swiss_arcs[[1]],rel2abs,scale=scale,translate=translate)

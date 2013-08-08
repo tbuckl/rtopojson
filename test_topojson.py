@@ -1,7 +1,7 @@
 
 import json
 from unittest import TestCase
-
+import pprint
 from topojson import coordinates, geometry, rel2abs
 
 data = """{
@@ -43,6 +43,10 @@ topology = json.loads(data)
 topology_arcs = topology['arcs']
 scale = topology['transform']['scale']
 translate = topology['transform']['translate']
+
+coords = coordinates([0], topology_arcs, scale, translate)
+
+pprint.pprint(coords)
 
 def test_rel2abs_noscale():
     arc = [[0, 0], [1, 1]]
@@ -99,4 +103,5 @@ def test_geometry():
         scale, translate )
     assert geom['type'] == "LineString"
     assert len(geom['coordinates']) == 26
+
 

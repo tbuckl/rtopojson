@@ -17,8 +17,11 @@ def rel2abs(arc, scale=None, translate=None):
         a, b = 0, 0
         for ax, bx in arc:
             a += ax
+            print(a)
             b += bx
+            print(b)
             yield scale[0]*a + translate[0], scale[1]*b + translate[1]
+            print(scale[0]*a + translate[0], scale[1]*b + translate[1])
     else:
         for x, y in arc:
             yield x, y
@@ -98,15 +101,14 @@ if __name__ == "__main__":
     scale = topology['transform']['scale']
     translate = topology['transform']['translate']
 
-    p = geometry({'type': "LineString", 'arcs': [0]}, topology['arcs'])
-    pprint.pprint(p)
-    
-    q = geometry({'type': "LineString", 'arcs': [0, 1]}, topology['arcs'])
-    pprint.pprint(q)
+p = geometry({'type': "LineString", 'arcs': [0]}, topology['arcs'])
+pprint.pprint(p)
 
-    r = geometry(topology['objects'][0], topology['arcs'])
-    pprint.pprint(r)
+q = geometry({'type': "LineString", 'arcs': [0, 1]}, topology['arcs'])
+pprint.pprint(q)
 
-    s = geometry(topology['objects'][1], topology['arcs'], scale, translate)
-    pprint.pprint(s)
+r = geometry(topology['objects'][0], topology['arcs'])
+pprint.pprint(r)
 
+s = geometry(topology['objects'][1], topology['arcs'], scale, translate)
+pprint.pprint(s)
