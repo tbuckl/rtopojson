@@ -1,15 +1,6 @@
 library("rjson")
 library("bitops")
 
-#swiss test data parsing
-swiss_data <- "inst/extdata/swissborders.topojson"
-swiss_poly <- fromJSON(paste(readLines(swiss_data), collapse=""))
-
-swiss_objects <- swiss_poly$objects$"swiss-cantons"$geometries
-arcs <- swiss_poly$arcs
-scale <- swiss_poly$transform$scale
-translate <- swiss_poly$transform$translate
-
 #value: returns a list of absolute coordinates 
 #(often longitude,latitude) 
 #arguments: takes an arc 
@@ -35,22 +26,18 @@ bitflipper <- function(i) {
   if (i >= 0) {i = i} else {i = bitFlip(i)}
 }
 
-arc_index <- swiss_objects[[5]]$arcs[[1]]
-
-object_types <- lapply(swiss_objects,function(x){x$type})
-lapply(swiss_objects[which(object_types=="Polygon")],plot_topojson)
-
 #takes a topojson "Polygon" object and 
 #makes it into an SP spatialpolygons object
 #and plots it
-plot_topojson <- function(object) {
+
+plot_topojson <- function(topojson_object,scale,translate,arcs) {
 
 # from the inside out:
 #1) flip bits for "the one's complement" (e.g. reversed arcs like -12)
 #2) add +1 to the index b/c of R's list indexes
 #3) subset all arcs from the total set for the object
 #4) apply the transformation to each arc and output as list
-arc_index <- object$arcs[[1]]
+arc_index <- topojson_object$arcs[[1]]
 abs_obj <- lapply(arcs[sapply(arc_index,bitflipper)+1],rel2abs,scale,translate)
 
 #flip the arcs with negative indices

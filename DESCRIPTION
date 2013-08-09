@@ -1,0 +1,9 @@
+Package: rtopojson
+Title: Tools for working with data written in the TopoJSON specification
+Description: This package may be used to parse polygon data written in the TopoJSON specification.  It parses into the 'sp' package Polygon data-type.  For more on the advantages of the TopoJSON specification see the wiki: https://github.com/mbostock/topojson/wiki.  
+Version:0.0.1
+Author: Tom Buckley <buckley.tom@gmail.com>
+Maintainer: Tom Buckley <buckley.tom@gmail.com>
+Depends: R (>= 2.15.1), sp, rjson, 
+Imports: bitops
+License: MIT
