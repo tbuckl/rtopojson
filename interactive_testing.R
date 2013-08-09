@@ -15,7 +15,7 @@ arc_index <- swiss_objects[[5]]$arcs[[1]]
 object_types <- lapply(swiss_objects,function(x){x$type})
 
 #parse all topojson polygon objects into sp polygons and return list of sp polygons
-sppolys <- lapply(swiss_objects[which(object_types=="Polygon")],topopoly_to_sp_poly,scale,translate,arcs)
+sppolys <- lapply(swiss_objects[which(object_types=="Polygon")],topo_poly_to_sp_poly,scale,translate,arcs)
 
 #plot one of the polygons as an example
 
