@@ -1,12 +1,13 @@
 library("rjson")
 library("bitops")
 
-#value: returns a list of absolute coordinates 
-#(often longitude,latitude) 
-#arguments: takes an arc 
-#(line-string of delta-encoded 
-#integer coordinates)
-#and (x,y) "scale" and (x,y) "translate" 
+#' @arguments 
+#' takes an arc (line-string of delta-encoded 
+#' integer coordinates)
+#' and (x,y) "scale" and (x,y) "translate" 
+#' @value 
+#' returns a list of absolute coordinates 
+#' (often longitude,latitude) 
 rel2abs <- function(arc, scale=Null, translate=Null) {
   if (!is.null(scale) & !is.null(translate)) {
     a <- 0
@@ -26,11 +27,15 @@ bitflipper <- function(i) {
   if (i >= 0) {i = i} else {i = bitFlip(i)}
 }
 
-#takes a topojson "Polygon" object and 
-#makes it into an SP spatialpolygons object
-#and plots it
 
-topo_poly_to_sp_poly <- function(topojson_object,scale,translate,arcs) {
+#' @arguments
+#' takes a parsed TopoJSON object
+#' @value
+#' returns a list of sp Polygons
+topo_poly_to_sp_poly <- function(topojson_object) {
+arcs <- topojson_object$arcs
+scale <- topojson_object$transform$scale
+translate <- topojson_object$transform$translate
 
 # from the inside out:
 #1) flip bits for "the one's complement" (e.g. reversed arcs like -12)
