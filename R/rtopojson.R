@@ -30,7 +30,7 @@ bitflipper <- function(i) {
 #makes it into an SP spatialpolygons object
 #and plots it
 
-plot_topojson <- function(topojson_object,scale,translate,arcs) {
+topo_poly_to_sp_poly <- function(topojson_object,scale,translate,arcs) {
 
 # from the inside out:
 #1) flip bits for "the one's complement" (e.g. reversed arcs like -12)
@@ -47,12 +47,9 @@ abs_obj[which(arc_index<0)] <- lapply(abs_obj[which(arc_index<0)],rev)
 #1)flatten list of arcs
 #2)make a 2-dimensional matrix from them
 #3)make an sp polygon class
-p1 <- Polygon(do.call(rbind,unlist(abs_obj,recursive=FALSE)))
-
-#plot the polygon
-p2 <- Polygons(list(p1),ID="a")
-p3 <- SpatialPolygons(list(p2))
-plot(p3)
-p3
+Polygon(do.call(rbind,unlist(abs_obj,recursive=FALSE)))
 
 }
+
+
+
