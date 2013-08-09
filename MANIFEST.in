@@ -1,2 +1,0 @@
-include LICENSE README.md test_topojson.py
-exclude MANIFEST.in
