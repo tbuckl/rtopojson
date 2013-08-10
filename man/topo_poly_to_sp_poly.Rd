@@ -32,4 +32,17 @@
   arcs which can be either "right" or "left" of a given
   polygon, TopoJSON
 }
+\examples{
+swiss_data <- "inst/extdata/swissborders.topojson"
+swiss_poly <- fromJSON(paste(readLines(swiss_data), collapse=""))
+swiss_objects <- swiss_poly$objects$"swiss-cantons"$geometries
+arcs <- swiss_poly$arcs
+scale <- swiss_poly$transform$scale
+translate <- swiss_poly$transform$translate
+object_types <- lapply(swiss_objects,function(x){x$type})
+sppolys <- lapply(swiss_objects[which(object_types=="Polygon")],topo_poly_to_sp_poly,scale,translate,arcs)
+p2 <- Polygons(list(sppolys[[1]]),ID="a")
+p3 <- SpatialPolygons(list(p2))
+plot(p3)
+}
 

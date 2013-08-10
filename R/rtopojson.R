@@ -37,12 +37,29 @@ bitflipper <- function(i) {
 #' TopoJSON indexes some arcs as "positive" and others as "negative" integers
 #' to allow for arcs which can be either "right" or "left" of a given polygon, TopoJSON 
 #' 
+#' Note that because the goal of this package is to work with external data
+#' the examples below are based on a parsed JSON file.  Examples can be found in the
+#' inst/extdata directory.  
+#' For example, to open and parse a topojson file on swiss "cantons" one would:
+#' \code{swiss_data <- "inst/extdata/swissborders.topojson"}
+#' \code{swiss_poly <- fromJSON(paste(readLines(swiss_data), collapse=""))}
+#' 
 #' @param topojson_object is a TopoJSON "Polygon" which contains, at the least, an index of arrays, and often
 #' contains a names and other variables
 #' @param scale scaling to apply to x and y 
 #' @param translate to apply to x and y 
 #' @param arcs line-strings of delta-encoded integer coordinates for all features in the TopoJSON file
 #' @return list of sp Polygons
+#' @examples
+#' swiss_objects <- swiss_poly$objects$"swiss-cantons"$geometries
+#' arcs <- swiss_poly$arcs
+#' scale <- swiss_poly$transform$scale
+#' translate <- swiss_poly$transform$translate
+#' object_types <- lapply(swiss_objects,function(x){x$type})
+#' sppolys <- lapply(swiss_objects[which(object_types=="Polygon")],topo_poly_to_sp_poly,scale,translate,arcs)
+#' p2 <- Polygons(list(sppolys[[1]]),ID="a")
+#' p3 <- SpatialPolygons(list(p2))
+#' plot(p3)
 topo_poly_to_sp_poly <- function(topojson_object,scale,translate,arcs) {
 
 # from the inside out:
