@@ -1,34 +1,35 @@
-#' container for TopoJSON JSON
-setClass("topojson",
-         representation(
+#' Open a TopoJSON JSON file 
+#' @param file file location on disk
+#' @return 'topojson' object with slots "name", "geometries, "arcs", "translate","scale","json","file"
+#' @examples
+#' us <- Topojson$new(file="inst/extdata/cali_nv_ariz.json")
+#' us$open()
+#' print(us$translate)
+#' print(us$geometries[[1]])
+Topojson <- setRefClass("Topojson",
+         fields = list(
+           file="character",
            json="list",
            geometries="list",
            name="character",
            arcs="list",
-           scale="list",
-           translate="list")
+           scale="vector",
+           translate="vector"),
+         methods = list(
+           open = function (file=.self$file)
+           {
+             json <<- fromJSON(paste(readLines(file,warn=FALSE)))
+             name <<- names(json$objects)
+             geometries <<- json$objects[[name]]$geometries
+             arcs <<- json$arcs
+             scale <<- json$transform$scale
+             translate <<- json$transform$translate
+           }
+         )
 )
 
-#' Open a TopoJSON JSON file
-#' @param an object of class 'topojson' 
-#' @param file file location on disk
-#' @return 'topojson' object with slots "name", "geometries, "arcs"
-#' @examples
-#' ca <- new("topojson")
-#' open(ca,"inst/extdata/cali_nv_ariz.json")
-#' print(ca.name)
-setMethod("open",
-    signature(con = "topojson"),
-    function (con, file="") 
-    {
-      con.json = fromJSON(paste(readLines(file,warn=FALSE)))
-      con.name = names(con.json$objects)
-      con.geometries = con.json$objects[[con.name]]$geometries
-      con.arcs = con.json$arcs
-      con.scale = con.json$transform$scale
-      con.translate = con.json$transform$translate
-    }
-)
+us <- Topojson$new(file="inst/extdata/cali_nv_ariz.json")
+us$open()
 
-
+Topojson$name(say_hello = function() message("Hi!"))
 
