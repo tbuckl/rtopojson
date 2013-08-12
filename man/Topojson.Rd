@@ -1,12 +1,12 @@
 \name{Topojson}
-\alias{\S4method{open}{Logger}}
-\alias{\S4method{t2sp}{Logger}}
-\alias{\S4method{plot}{Logger}}
+\alias{\S4method{open}{Topojson}}
+\alias{\S4method{t2sp}{Topojson}}
+\alias{\S4method{plot}{Topojson}}
 \title{Class for TopoJSON Specified Spatial Data}
 \usage{
-\S4method{new}{Logger}()
-\S4method{open}{Logger}(file="")
-\S4method{plot}{Logger}()
+\S4method{new}{Topojson}()
+\S4method{open}{Topojson}(file="")
+\S4method{plot}{Topojson}()
 \value{
   'topojson' object with slots "name", "geometries, "arcs",
   "translate","scale","json","file"
