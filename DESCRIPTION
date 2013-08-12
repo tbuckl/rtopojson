@@ -13,6 +13,9 @@ Depends:
     R (>= 3.0.1),
     sp,
     rjson,
+    bitops
+Suggests:
+    knitr
 Imports:
     bitops
 License: MIT

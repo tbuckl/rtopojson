@@ -1,12 +1,12 @@
 \name{Topojson}
-\alias{\S4method{open}{Topojson}}
-\alias{\S4method{t2sp}{Topojson}}
-\alias{\S4method{plot}{Topojson}}
+\alias{Topojson}
 \title{Class for TopoJSON Specified Spatial Data}
 \usage{
-\S4method{new}{Topojson}()
-\S4method{open}{Topojson}(file="")
-\S4method{plot}{Topojson}()
+  Topojson(...)
+}
+\arguments{
+  \item{file}{file location on disk}
+}
 \value{
   'topojson' object with slots "name", "geometries, "arcs",
   "translate","scale","json","file"
@@ -46,9 +46,6 @@
   encode shapefiles, csv's, and GeoJSON.
 }
 \examples{
-ca <- Topojson$new()
-ca$open(file="inst/extdata/cali_nv_ariz.json")
-ca$t2sp()
-ca$plot()
+t1 <- Topojson$new()
 }
 
