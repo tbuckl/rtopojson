@@ -16,7 +16,7 @@ Topojson <- setRefClass("Topojson",
            scale="vector",
            translate="vector"),
          methods = list(
-           open = function (file=.self$file)
+           open = function ()
            {
              json <<- fromJSON(paste(readLines(file,warn=FALSE)))
              name <<- names(json$objects)
@@ -31,5 +31,7 @@ Topojson <- setRefClass("Topojson",
 us <- Topojson$new(file="inst/extdata/cali_nv_ariz.json")
 us$open()
 
-Topojson$name(say_hello = function() message("Hi!"))
+
+
+
 
