@@ -81,5 +81,21 @@ Polygon(do.call(rbind,unlist(abs_obj,recursive=FALSE)))
 
 }
 
+#' Plots a list of SP Polygons
+#' @params polylist list of sp 'Polygon'
+#' @params names vector of names for the polygons, optional
+#' @result a SpatialPolygons object and a plot
+#' 
+plotpolys <- function(polylist,names=c()) {
+  if(length(names) == 0) {names = as.character(c(1:length(polylist)))} else {}
+  cons <- list()
+  for(i in 1:length(polylist)){
+    print(str(polylist[i]))
+    cons[i] <- Polygons(polylist[i], names[i])
+  }
+  p3 <- SpatialPolygons(cons,1:length(cons))
+  plot(p3)
+}
+
 
 

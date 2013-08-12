@@ -29,9 +29,15 @@ Topojson <- setRefClass("Topojson",
              scale <<- json$transform$scale
              translate <<- json$transform$translate
            },
-           t2sp = function (poly)
+           t2sp = function ()
            {
-             Polygon(topo_poly_to_sp_poly(poly,scale,translate,arcs))
+             object_types <- lapply(geometries,function(x){x$type})
+             sppolys <- lapply(geometries[which(object_types=="Polygon")],topo_poly_to_sp_poly,scale,translate,arcs)
+             sp_polygons <<- sppolys
+           },
+           plot = function ()
+           {
+            plotpolys(sp_polygons)
            }
          ))
 
