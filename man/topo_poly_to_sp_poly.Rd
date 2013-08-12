@@ -31,10 +31,17 @@
   "positive" and others as "negative" integers to allow for
   arcs which can be either "right" or "left" of a given
   polygon, TopoJSON
+
+  Note that because the goal of this package is to work
+  with external data the examples below are based on a
+  parsed JSON file.  Examples can be found in the
+  inst/extdata directory. For example, to open and parse a
+  topojson file on swiss "cantons" one would:
+  \code{swiss_data <- "inst/extdata/swissborders.topojson"}
+  \code{swiss_poly <- fromJSON(paste(readLines(swiss_data),
+  collapse=""))}
 }
 \examples{
-swiss_data <- "inst/extdata/swissborders.topojson"
-swiss_poly <- fromJSON(paste(readLines(swiss_data), collapse=""))
 swiss_objects <- swiss_poly$objects$"swiss-cantons"$geometries
 arcs <- swiss_poly$arcs
 scale <- swiss_poly$transform$scale

@@ -60,6 +60,7 @@ bitflipper <- function(i) {
 #' p2 <- Polygons(list(sppolys[[1]]),ID="a")
 #' p3 <- SpatialPolygons(list(p2))
 #' plot(p3)
+#' @export
 topo_poly_to_sp_poly <- function(topojson_object,scale,translate,arcs) {
 
 # from the inside out:
@@ -82,10 +83,10 @@ Polygon(do.call(rbind,unlist(abs_obj,recursive=FALSE)))
 }
 
 #' Plots a list of SP Polygons
-#' @params polylist list of sp 'Polygon'
-#' @params names vector of names for the polygons, optional
-#' @result a SpatialPolygons object and a plot
-#' 
+#' @param polylist list of sp 'Polygon'
+#' @param names vector of names for the polygons, optional
+#' @return a SpatialPolygons object and a plot
+#' @export
 plotpolys <- function(polylist,names=c()) {
   if(length(names) == 0) {names = as.character(c(1:length(polylist)))} else {}
   cons <- list()
