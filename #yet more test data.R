@@ -1,6 +1,6 @@
 #yet more test data
-us_data < "inst/extdata/cali_nv_ariz.topojson"
-us_poly < fromJSON(paste(readLines(us_data), collapse=""))
+us_data <- "inst/extdata/cali_nv_ariz.json"
+us_poly <- fromJSON(paste(readLines(us_data), collapse=""))
 
 #initial test data
 json_file < "inst/extdata/example.topojson"
