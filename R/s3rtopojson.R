@@ -82,15 +82,6 @@ Polygon(do.call(rbind,unlist(abs_obj,recursive=FALSE)))
 
 }
 
-topo_arc_to_sp_line <- function(arc,scale,translate) {
-
-abs_ln <- rel2abs(arc,scale,translate)
-
-Lines(list(Line(abs_ln)))
-
-}
-
-
 #' Plots a list of SP Polygons
 #' @param polylist list of sp 'Polygon'
 #' @param names vector of names for the polygons, optional
