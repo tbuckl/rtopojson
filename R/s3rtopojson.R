@@ -82,6 +82,15 @@ Polygon(do.call(rbind,unlist(abs_obj,recursive=FALSE)))
 
 }
 
+topo_arc_to_sp_line <- function(arc,scale,translate) {
+
+abs_ln <- rel2abs(arc,scale,translate)
+
+Lines(list(Line(abs_ln)))
+
+}
+
+
 #' Plots a list of SP Polygons
 #' @param polylist list of sp 'Polygon'
 #' @param names vector of names for the polygons, optional
@@ -98,5 +107,22 @@ plotpolys <- function(polylist,names=c()) {
   plot(p3)
 }
 
+#' single arc to an sp "line" class
+arc2sp.line <- function(arq) {
+  zp <- lapply(arq,rel2abs,abt$scale,abt$translate)
+  Line(matrix(unlist(zp),ncol=2,byrow=TRUE))
+}
+
+#' list of arcs to an sp SpatialLines class
+#' @param arqs topojson arcs from rtopojson class
+#' @return a SpatialLines object
+#' @export
+arcs2sp.line <-function(arqs) {
+  z = list()
+  for(i in seq_along(arqs)){
+    z[i] <- Lines(list(arc2sp.line(arqs[i])),ID=as.character(i))    
+  }
+  SpatialLines(z)
+}
 
 
