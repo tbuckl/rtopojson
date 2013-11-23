@@ -12,6 +12,7 @@ Maintainer: Tom Buckley <buckley.tom@gmail.com>
 Depends:
     R (>= 3.0.1),
     sp,
+    maptools,
     rjson,
 Imports:
     bitops
