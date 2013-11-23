@@ -116,4 +116,54 @@ arcs2sp.line <-function(arqs) {
   SpatialLines(z)
 }
 
+# Because JSON stores 0 index values for arrays, the TopoJSON spec uses
+# bitflipping to store negative indices to avoid confusion with 0.
+# For example, -1 referse to the inverse arc of 0.  
+#also, because of r's no-zero index on things
+#need to add +1 to all arcs to get the right r arc's
+bitflipper2 <- function(i) {
+  if (i >= 0) {i = i} else {i = bitFlip(i)}
+  i <- i+1
+}
+
+#get distance of a set of points to an arc
+#return as vector
+#take spatialpointsdataframe, arc number
+#example usage: pts.arc.dist(arcnum=1,polypoints=ply.pnts,spplys=currentpoly)
+pts.arc.dist <- function(arcnum,polypoints,spplys,breaks) {
+  ln1 <- ab.arcs[arcnum]
+  plot(spplys)
+  plot(polypoints,add=TRUE)
+  plot(ln1,add=TRUE,col="blue")
+  snp <- snapPointsToLines(polypoints,ln1)
+  dst <- list()  
+  for(i in seq_along(polypoints)) {
+    dst[i] <- gDistance(polypoints[i,],snp[i,])
+  }
+  dst <- unlist(dst)
+  polypoints@data <- cbind(polypoints@data,dstbin=cut(dst,breaks=breaks))
+  boxplot(lm.pc.all.residuals~dstbin,data=polypoints,varwidth=T)
+  dst  
+}
+
+#returns matrix where column headers are arc index numbers from
+#topojson arcs used for distance
+#example usage: pts.poly.arcs.dist(6,abt,m1.lm.pca.residuals,ab)
+pts.poly.arcs.dist <- function(plynum,topopolys,spnts,spplys,breaks=7) {
+  ply.pnts <- subset(spnts,abpolyID==plynum)
+  h.arcs <- topopolys$geometries[[plynum]]$arcs[[1]]
+  #  some plots to check that everything is kosher
+  currentpoly <- spplys[plynum,]
+  plot(spplys)
+  plot(currentpoly,add=TRUE,col="red")
+  plot(currentpoly)
+  plot(ply.pnts,add=TRUE)
+  h.arcs.flpd <- sapply(h.arcs,bitflipper2)
+  print(h.arcs.flpd)
+  tmp.lst <- lapply(h.arcs.flpd,pts.arc.dist,polypoints=ply.pnts,spplys=currentpoly,breaks=breaks)
+  names(ply.pnts)
+  m <- matrix(unlist(tmp.lst),ncol=length(tmp.lst))
+  colnames(m) <- h.arcs
+  m
+}
 
