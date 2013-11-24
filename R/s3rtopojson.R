@@ -130,17 +130,23 @@ bitflipper2 <- function(i) {
 #return as vector
 #take spatialpointsdataframe, arc number
 #example usage: pts.arc.dist(arcnum=1,polypoints=ply.pnts,spplys=currentpoly)
-pts.arc.dist <- function(arcnum,polypoints,spplys,breaks) {
-  ln1 <- ab.arcs[arcnum]
-  plot(spplys)
-  plot(polypoints,add=TRUE)
-  plot(ln1,add=TRUE,col="blue")
+pts.arc.dist <- function(ln1,polypoints) {
   snp <- snapPointsToLines(polypoints,ln1)
   dst <- list()  
   for(i in seq_along(polypoints)) {
     dst[i] <- gDistance(polypoints[i,],snp[i,])
   }
   dst <- unlist(dst)
+}
+
+#takes arc number, points, and polygons
+#plots single polygon, points, highlights arc, and plots boxplot
+plot.pts.arc.dist <- function(arcnum,polypoints,poly,breaks) {
+  ln1 <- ab.arcs[arcnum]
+  plot(poly)
+  plot(polypoints,add=TRUE)
+  plot(ln1,add=TRUE,col="blue")
+  dst <- pts.arc.dist(ln1,polypoints)
   polypoints@data <- cbind(polypoints@data,dstbin=cut(dst,breaks=breaks))
   boxplot(lm.pc.all.residuals~dstbin,data=polypoints,varwidth=T)
   dst  
@@ -149,7 +155,7 @@ pts.arc.dist <- function(arcnum,polypoints,spplys,breaks) {
 #returns matrix where column headers are arc index numbers from
 #topojson arcs used for distance
 #example usage: pts.poly.arcs.dist(6,abt,m1.lm.pca.residuals,ab)
-pts.poly.arcs.dist <- function(plynum,topopolys,spnts,spplys,breaks=7) {
+pts.poly.arcs.dist <- function(plynum,arcnum,topopolys,spnts,spplys,breaks=7) {
   ply.pnts <- subset(spnts,abpolyID==plynum)
   h.arcs <- topopolys$geometries[[plynum]]$arcs[[1]]
   #  some plots to check that everything is kosher
@@ -160,7 +166,7 @@ pts.poly.arcs.dist <- function(plynum,topopolys,spnts,spplys,breaks=7) {
   plot(ply.pnts,add=TRUE)
   h.arcs.flpd <- sapply(h.arcs,bitflipper2)
   print(h.arcs.flpd)
-  tmp.lst <- lapply(h.arcs.flpd,pts.arc.dist,polypoints=ply.pnts,spplys=currentpoly,breaks=breaks)
+  tmp.lst <- lapply(h.arcs.flpd,plot.pts.arc.dist,polypoints=ply.pnts,poly=currentpoly,breaks=breaks)
   names(ply.pnts)
   m <- matrix(unlist(tmp.lst),ncol=length(tmp.lst))
   colnames(m) <- h.arcs
