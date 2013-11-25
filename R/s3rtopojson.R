@@ -138,12 +138,19 @@ pts.arc.dist <- function(ln1,polypoints) {
   }
   dst <- unlist(dst)
 }
+#would be nice to be able to call a Plot function on this above
+
+#ideal function - 
+#given an arc:
+#gets the adjacent polygons, plots them (needs polygon data)
+#gets points within those polygons, plots them (needs point data)
+#gets distance of points in a given polygon to the arc, plots boxplot
 
 #takes arc number, points, and polygons
-#plots single polygon, points, highlights arc, and plots boxplot
-plot.pts.arc.dist <- function(arcnum,polypoints,poly,breaks) {
+#plots two polygons, two sets of points, highlights arc, and plots two boxplots (ideally with one flipped)
+plot.pts.arc.dist <- function(arcnum,polypoints,polys,breaks) {
   ln1 <- ab.arcs[arcnum]
-  plot(poly)
+  plot(polys)
   plot(polypoints,add=TRUE)
   plot(ln1,add=TRUE,col="blue")
   dst <- pts.arc.dist(ln1,polypoints)
@@ -151,6 +158,55 @@ plot.pts.arc.dist <- function(arcnum,polypoints,poly,breaks) {
   boxplot(lm.pc.all.residuals~dstbin,data=polypoints,varwidth=T)
   dst  
 }
+
+
+#create arc/polyindex for topojson
+arcp.indx <- function(topojson) {
+  geoms <- topojson$geometries
+  m <- matrix(numeric(0), 0,2)
+  for(i in seq_along(geoms)) {
+    m <- rbind(m,(cbind(c(unlist(geoms[[i]]$arcs)),c(i))))
+  }
+  pstv <- sapply(m[,1],bitflipper)
+  m <- cbind(m,pstv)
+  colnames(m) <- c("arcid","polyid","pstv.id")
+  m
+}
+
+abtabt[which(ab.arcs.lengths<100)]
+m8 <- arcp.indx(abt)
+m8.double.index <- names(summary(as.factor(m8[,3])))
+
+#drop double arcs less than 100 m in length
+m8.double.index <- m8.double.index[!m8.double.index %in% which(ab.arcs.lengths<100)]
+
+arcstoplot <- m8[m8[,3] %in% m8.double.index,]
+
+#for each double arc, feed arc index and polygon into plotting function
+
+arcstoplot <- arcstoplot[order(arcstoplot[,3]),]
+
+#get all arc lengths
+#returns vector of lengths
+arclengths <- function(arcs) {
+  ab.arcs.lengths = c()
+  for(i in seq_along(ab.arcs)) {
+    ab.arcs.lengths[i] <- SpatialLinesLengths(ab.arcs[i])
+  }
+  ab.arcs.lengths
+}
+
+ab.arcs.lengths <- arclengths(ab.arcs)
+
+#need to play around with simplifaction and quantization later
+#for topojson output.
+#for example, almost 1/2 of the arcs are <100 meters (~ a city block size)
+#here's a plot of them:
+plot(ab.arcs)
+plot(ab.arcs[which(ab.arcs.lengths<100)],add=TRUE,col="red")
+#for now, going to exclude all those from analysis
+
+smallarcs <- which(ab.arcs.lengths<100)
 
 #returns matrix where column headers are arc index numbers from
 #topojson arcs used for distance
@@ -164,9 +220,9 @@ pts.poly.arcs.dist <- function(plynum,arcnum,topopolys,spnts,spplys,breaks=7) {
   plot(currentpoly,add=TRUE,col="red")
   plot(currentpoly)
   plot(ply.pnts,add=TRUE)
-  h.arcs.flpd <- sapply(h.arcs,bitflipper2)
-  print(h.arcs.flpd)
-  tmp.lst <- lapply(h.arcs.flpd,plot.pts.arc.dist,polypoints=ply.pnts,poly=currentpoly,breaks=breaks)
+#  h.arcs.flpd <- sapply(h.arcs,bitflipper2)
+#  print(h.arcs.flpd)
+  tmp.lst <- plot.pts.arc.dist(arcnum=arcnum,polypoints=ply.pnts,poly=currentpoly,breaks=breaks)
   names(ply.pnts)
   m <- matrix(unlist(tmp.lst),ncol=length(tmp.lst))
   colnames(m) <- h.arcs
