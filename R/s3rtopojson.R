@@ -82,6 +82,7 @@ Polygon(do.call(rbind,unlist(abs_obj,recursive=FALSE)))
 
 }
 
+
 #' Plots a list of SP Polygons
 #' @param polylist list of sp 'Polygon'
 #' @param names vector of names for the polygons, optional
@@ -159,7 +160,6 @@ plot.pts.arc.dist <- function(arcnum,polypoints,polys,breaks) {
   dst  
 }
 
-
 #create arc/polyindex for topojson
 arcp.indx <- function(topojson) {
   geoms <- topojson$geometries
@@ -169,22 +169,9 @@ arcp.indx <- function(topojson) {
   }
   pstv <- sapply(m[,1],bitflipper)
   m <- cbind(m,pstv)
-  colnames(m) <- c("arcid","polyid","pstv.id")
+#  colnames(m) <- c("arcid","polyid","pstv.id")
   m
 }
-
-abtabt[which(ab.arcs.lengths<100)]
-m8 <- arcp.indx(abt)
-m8.double.index <- names(summary(as.factor(m8[,3])))
-
-#drop double arcs less than 100 m in length
-m8.double.index <- m8.double.index[!m8.double.index %in% which(ab.arcs.lengths<100)]
-
-arcstoplot <- m8[m8[,3] %in% m8.double.index,]
-
-#for each double arc, feed arc index and polygon into plotting function
-
-arcstoplot <- arcstoplot[order(arcstoplot[,3]),]
 
 #get all arc lengths
 #returns vector of lengths
@@ -196,25 +183,12 @@ arclengths <- function(arcs) {
   ab.arcs.lengths
 }
 
-ab.arcs.lengths <- arclengths(ab.arcs)
-
-#need to play around with simplifaction and quantization later
-#for topojson output.
-#for example, almost 1/2 of the arcs are <100 meters (~ a city block size)
-#here's a plot of them:
-plot(ab.arcs)
-plot(ab.arcs[which(ab.arcs.lengths<100)],add=TRUE,col="red")
-#for now, going to exclude all those from analysis
-
-smallarcs <- which(ab.arcs.lengths<100)
-
 #returns matrix where column headers are arc index numbers from
 #topojson arcs used for distance
 #example usage: pts.poly.arcs.dist(6,abt,m1.lm.pca.residuals,ab)
-pts.poly.arcs.dist <- function(plynum,arcnum,topopolys,spnts,spplys,breaks=7) {
+pts.poly.arcs.dist <- function(arcnum,plynum,topopolys,spnts,spplys,breaks=7) {
   ply.pnts <- subset(spnts,abpolyID==plynum)
-  h.arcs <- topopolys$geometries[[plynum]]$arcs[[1]]
-  #  some plots to check that everything is kosher
+  if(length(ply.pnts)==0) next
   currentpoly <- spplys[plynum,]
   plot(spplys)
   plot(currentpoly,add=TRUE,col="red")
@@ -223,9 +197,5 @@ pts.poly.arcs.dist <- function(plynum,arcnum,topopolys,spnts,spplys,breaks=7) {
 #  h.arcs.flpd <- sapply(h.arcs,bitflipper2)
 #  print(h.arcs.flpd)
   tmp.lst <- plot.pts.arc.dist(arcnum=arcnum,polypoints=ply.pnts,poly=currentpoly,breaks=breaks)
-  names(ply.pnts)
-  m <- matrix(unlist(tmp.lst),ncol=length(tmp.lst))
-  colnames(m) <- h.arcs
-  m
 }
 
