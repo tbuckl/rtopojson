@@ -188,14 +188,15 @@ arclengths <- function(arcs) {
 #example usage: pts.poly.arcs.dist(6,abt,m1.lm.pca.residuals,ab)
 pts.poly.arcs.dist <- function(arcnum,plynum,topopolys,spnts,spplys,breaks=7) {
   ply.pnts <- subset(spnts,abpolyID==plynum)
-  if(length(ply.pnts)==0) next
-  currentpoly <- spplys[plynum,]
-  plot(spplys)
-  plot(currentpoly,add=TRUE,col="red")
-  plot(currentpoly)
-  plot(ply.pnts,add=TRUE)
-#  h.arcs.flpd <- sapply(h.arcs,bitflipper2)
-#  print(h.arcs.flpd)
-  tmp.lst <- plot.pts.arc.dist(arcnum=arcnum,polypoints=ply.pnts,poly=currentpoly,breaks=breaks)
+  if(length(ply.pnts)!=0) {    
+    currentpoly <- spplys[plynum,]
+    plot(spplys)
+    plot(currentpoly,add=TRUE,col="red")
+    plot(currentpoly)
+    plot(ply.pnts,add=TRUE)
+  #  h.arcs.flpd <- sapply(h.arcs,bitflipper2)
+  #  print(h.arcs.flpd)
+    tmp.lst <- plot.pts.arc.dist(arcnum=arcnum,polypoints=ply.pnts,poly=currentpoly,breaks=breaks)
+  }
 }
 
