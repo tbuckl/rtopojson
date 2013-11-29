@@ -161,13 +161,16 @@ plot.pts.arc.dist <- function(arcnum,polypoints,polys,breaks) {
 }
 
 #create arc/polyindex for topojson
+#takes topojson
+#returns a matrix
+#with topojson arcids, polygon ids, and positive ID's
 arcp.indx <- function(topojson) {
   geoms <- topojson$geometries
   m <- matrix(numeric(0), 0,2)
   for(i in seq_along(geoms)) {
     m <- rbind(m,(cbind(c(unlist(geoms[[i]]$arcs)),c(i))))
   }
-  pstv <- sapply(m[,1],bitflipper)
+  pstv <- sapply(m[,1],bitflipper2)
   m <- cbind(m,pstv)
 #  colnames(m) <- c("arcid","polyid","pstv.id")
   m
