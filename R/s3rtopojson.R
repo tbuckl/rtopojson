@@ -125,6 +125,7 @@ arcs2sp.line <-function(arqs) {
 bitflipper2 <- function(i) {
   if (i >= 0) {i = i} else {i = bitFlip(i)}
   i <- i+1
+  i
 }
 
 #get distance of a set of points to an arc
@@ -203,3 +204,14 @@ pts.poly.arcs.dist <- function(arcnum,plynum,topopolys,spnts,spplys,breaks=7) {
   }
 }
 
+arc.nbrs.t <- function(arcnum,plynum,topopolys,spnts,spplys) {
+  ply.pnts <- subset(spnts,abpolyID==plynum)
+}
+
+# example: pctn.wthn.arc.dist(arcnum=v[1],polypoints=ply.pnts,poly=currentpoly,breaks=breaks)
+# returns index of points which are within specified percent distance (default 15%) of arc
+prcnt.wthn.idx <- function(arc,polypoints,prcnt.dst=0.15) {
+  dst <- pts.arc.dist(arc,polypoints)
+  close.index <- which(dst<=quantile(dst,c(prcnt.dst)))
+  close.index
+}
