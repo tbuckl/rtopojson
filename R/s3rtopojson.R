@@ -212,6 +212,6 @@ arc.nbrs.t <- function(arcnum,plynum,topopolys,spnts,spplys) {
 # returns index of points which are within specified percent distance (default 15%) of arc
 prcnt.wthn.idx <- function(arc,polypoints,prcnt.dst=0.15) {
   dst <- pts.arc.dist(arc,polypoints)
-  close.index <- which(dst<=quantile(dst,c(prcnt.dst)))
-  close.index
+  close.logical <- dst<=quantile(dst,c(prcnt.dst))
+  close.logical
 }
