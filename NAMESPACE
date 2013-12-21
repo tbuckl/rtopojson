@@ -1,4 +1,6 @@
+export(plotpolys)
 export(rel2abs)
+<<<<<<< HEAD
 export(Topojson)
 export(arc2sp.line)
 export(arcs2sp.line)
@@ -8,3 +10,6 @@ export(arcp.indx)
 export(bitflipper2)
 export(prcnt.wthn.idx)
 
+=======
+export(topo_poly_to_sp_poly)
+>>>>>>> b0f0254ee81efbcc8c14325dc58ef9341977fafa

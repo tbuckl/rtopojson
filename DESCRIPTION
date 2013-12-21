@@ -14,7 +14,13 @@ Depends:
     sp,
     maptools,
     rjson,
+<<<<<<< HEAD
     bitops,
+=======
+    bitops
+Suggests:
+    knitr
+>>>>>>> b0f0254ee81efbcc8c14325dc58ef9341977fafa
 Imports:
     bitops
 License: MIT
