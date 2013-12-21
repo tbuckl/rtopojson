@@ -1,2 +1,10 @@
 export(rel2abs)
 export(Topojson)
+export(arc2sp.line)
+export(arcs2sp.line)
+export(pts.poly.arcs.dist)
+export(arclengths)
+export(arcp.indx)
+export(bitflipper2)
+export(prcnt.wthn.idx)
+
