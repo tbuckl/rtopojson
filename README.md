@@ -6,6 +6,10 @@ For more on the R 'sp' package for working with spatial data see [the Comprehens
 ##Functionality
 Import TopoJSON Polygon objects to R SpatialPolygons 'sp' class.
 
+Import TopoJSON Polygon objects to R SpatialLines 'sp' class.
+
+Find neighbors of arcs within a certain distance. 
+
 Note that currently only TopoJSON of the type "Polygon" works.
 
 ##To Do:
