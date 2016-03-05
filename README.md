@@ -3,6 +3,12 @@ The goal of this package is to allow R users to work with the TopoJSON specifica
 
 For more on the R 'sp' package for working with spatial data see [the Comprehensive R Archive Network](http://cran.r-project.org/web/packages/sp/index.html)
 
+##Installation
+
+1. Install the package dependencies ('sp','rjson')
+2. Download the [tar.gz file in this repository](https://github.com/tombuckley/rtopojson/raw/master/rtopojson_0.0.2.tar.gz)
+3. Install from source `install.packages("/path/to/rtopojson_0.0.2.tar.gz", repos = NULL, type="source")`
+
 ##Functionality
 Import TopoJSON Polygon objects to R SpatialPolygons 'sp' class.
 
