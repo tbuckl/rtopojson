@@ -2,7 +2,6 @@
 \alias{Topojson}
 \title{Class for TopoJSON Specified Spatial Data}
 \usage{
-<<<<<<< HEAD
 \S4method{new}{Topojson}()
 \S4method{open}{Topojson}(file="")
 \S4method{plot}{Topojson}()
@@ -53,5 +52,3 @@
 \examples{
 t1 <- Topojson$new()
 }
-
->>>>>>> b0f0254ee81efbcc8c14325dc58ef9341977fafa
