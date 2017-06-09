@@ -100,8 +100,8 @@ plotpolys <- function(polylist,names=c()) {
 }
 
 #' single arc to an sp "line" class
-arc2sp.line <- function(arq) {
-  zp <- lapply(arq,rel2abs,abt$scale,abt$translate)
+arc2sp.line <- function(arq,scale,translate) {
+  zp <- lapply(arq,rel2abs,scale,translate)
   Line(matrix(unlist(zp),ncol=2,byrow=TRUE))
 }
 
@@ -109,10 +109,10 @@ arc2sp.line <- function(arq) {
 #' @param arqs topojson arcs from rtopojson class
 #' @return a SpatialLines object
 #' @export
-arcs2sp.line <-function(arqs) {
+arcs2sp.line <-function(arqs,scale,translate) {
   z = list()
   for(i in seq_along(arqs)){
-    z[i] <- Lines(list(arc2sp.line(arqs[i])),ID=as.character(i))    
+    z[i] <- Lines(list(arc2sp.line(arqs[i],scale,translate)),ID=as.character(i))    
   }
   SpatialLines(z)
 }
